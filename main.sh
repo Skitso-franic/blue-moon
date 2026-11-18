@@ -1,7 +1,13 @@
 #!/bin/bash
+set -Eeuo pipefail
 clear
 
-#start of startup varibles
+echo "checking if sudo"
+if [ "$EUID" -ne 0 ]; then
+    echo "this script must be run with sudo" >&2
+    exit 1
+fi
+
 
 SUDO_USER="${SUDO_USER:-nobody}"
 
@@ -10,15 +16,18 @@ SUDO_USER="${SUDO_USER:-nobody}"
 #because if you dont it will break
 #most of the varibles in this script!!!
 
+
+#start of startup varibles
+
 #checks if running on arch linux
-if ! grep -q '^ID=arch' /etc/os-release 2>/dev/null
+if ! grep -q '^ID=arch' /etc/os-release 2>/dev/null; then
  exit 1
 fi
 
-set -euo pipefail
-
 TMP_DIR=$(mktemp -d)
-FONT_DIR="$HOME/.local/share/fonts/MapleMono"
+trap 'rm -rf "$TMP_DIR"' EXIT
+
+FONT_DIR="/home/$SUDO_USER/.local/share/fonts/MapleMono"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -61,18 +70,12 @@ echo "starting changes"
 #chesks if useing sudo
 sleep 0.5
 clear
-echo "checking if sudo"
-if [ "$EUID" -ne 0 ]; then
-    echo "this script must be run with sudo" >&2
-    exit 1
-fi
-sleep 0.5
 #checks if multilib is active
 sleep 0.1
 
 #nightmare nightmare nightmare
 
-sudo pacman -Syu
+pacman -Syu
 
 if grep -P "^\s*\[multilib\]" "$PACMAN_CONF" > /dev/null; then
 	sleep 0.1
@@ -87,10 +90,10 @@ else
     fi
 fi
 #flatpak and pacman
-sudo pacman -S --needed --noconfirm flatpak
+pacman -S --needed --noconfirm flatpak
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-sudo pacman -S --needed --noconfirm git base-devel
-sudo pacman -S --needed --noconfirm neovim fastfetch firefox
+pacman -S --needed --noconfirm git base-devel
+pacman -S --needed --noconfirm neovim fastfetch firefox
 
 #is yet another yogurt installed?
 if command -v "yay" &> /dev/null; then
@@ -105,21 +108,38 @@ cd yay
 #fixed running makepkg as sudo
 sudo -u "$SUDO_USER" makepkg -si --noconfirm
 
-#cd..
+cd ..
 rm -rf yay
 #install waybar
-sudo pacman -S --needed --noconfirm waybar 
+pacman -S --needed --noconfirm waybar 
 
 #installs maple mono
 if ! command -v curl &>/dev/null || ! command -v unzip &>/dev/null; then
     echo "Installing required tools (curl, unzip)..."
-    sudo pacman -S --needed --noconfirm curl unzip
+    pacman -S --needed --noconfirm curl unzip
 fi
 mkdir -p "$FONT_DIR"
-curl -L -s "https://github.com" -o "$TMP_DIR/MapleMono-TTF.zip"
+curl -L --fail --show-error --silent "https://github.com/subframe7536/maple-font/releases/download/v7.9/MapleMono-TTF.zip" -o "$TMP_DIR/MapleMono-TTF.zip"
+#validates archive
+if ! unzip -tq "$TMP_DIR/MapleMono-TTF.zip" >/dev/null; then
+    echo "archive is invalid"
+    exit 1
+fi
+#extract zip
+unzip -oq "$TMP_DIR/MapleMono-TTF.zip" -d "$TMP_DIR/MapleMono-TTF"
+#verify font
+find "$TMP_DIR/MapleMono-TTF" -type f -iname '*.ttf' -print -quit
+#confirm it exists
+if ! find "$TMP_DIR/MapleMono-TTF" -type f -iname '*.ttf' -print | grep -q .; then
+    echo "no ttf fonts found"
+    exit 1
+fi
+#installs font
+find "$TMP_DIR/MapleMono-TTF" -type f -iname '*.ttf' \
+    -exec cp {} "$FONT_DIR"/ \;
+chown "$SUDO_USER":"$SUDO_USER" "$FONT_DIR"/*.ttf
+sudo -u "$SUDO_USER" fc-cache -fv
 
-
-fc-cache -fv
 
 #hyprpaper
 
@@ -149,12 +169,13 @@ fi
 
 
 #configs
+sudo -u "$SUDO_USER" mkdir -p "$CONFIG_DEST"
 
 for item in "$DATA_DIR"/*; do
     if [ -d "$item" ]; then
         target_name=$(basename "$item")
         echo "Copying $target_name to $CONFIG_DEST..."
-        cp -r "$item" "$CONFIG_DEST/"
+        sudo -u "$SUDO_USER" cp -r "$item" "$CONFIG_DEST/"
     fi
 done
 
