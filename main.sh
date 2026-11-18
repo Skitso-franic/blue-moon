@@ -39,8 +39,8 @@ TARGET_WALLPAPER="$TARGET_DIR/background.jpg" #hyprpaper
 SOURCE_WALLPAPER="$SCRIPT_DIR/background.jpg"
 
 
-Version="epsilon_0.8a"
-Support_link="linkgoeshere"
+Version="epsilon_0.9a"
+Support_link="https://github.com/Skitso-franic/rice/issues"
 PACMAN_CONF="/etc/pacman.conf"
 
 
@@ -178,4 +178,13 @@ for item in "$DATA_DIR"/*; do
         sudo -u "$SUDO_USER" cp -r "$item" "$CONFIG_DEST/"
     fi
 done
+
+#finish setup
+
+echo "setup done"
+echo ""
+echo "please report any bugs/issues"
+echo "$Support_link"
+echo "script version: $Version"
+
 
