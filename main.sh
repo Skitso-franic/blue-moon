@@ -93,7 +93,7 @@ fi
 pacman -S --needed --noconfirm flatpak
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 pacman -S --needed --noconfirm git base-devel
-pacman -S --needed --noconfirm neovim fastfetch firefox
+pacman -S --needed --noconfirm neovim fastfetch firefox rofi
 
 #is yet another yogurt installed?
 if command -v "yay" &> /dev/null; then
