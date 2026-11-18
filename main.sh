@@ -3,6 +3,15 @@ clear
 
 #start of startup varibles
 
+SUDO_USER="${SUDO_USER:-nobody}"
+
+#most important varible is sudo user
+#keep it at the top of the script
+#because if you dont it will break
+#most of the varibles in this script!!!
+
+set -e
+
 TMP_DIR=$(mktemp -d)
 FONT_DIR="$HOME/.local/share/fonts/MapleMono"
 
@@ -11,14 +20,12 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DATA_DIR="$SCRIPT_DIR/data"
 CONFIG_DEST="/home/$SUDO_USER/.config"
 
-SUDO_USER="${SUDO_USER:-nobody}"
-
 TARGET_DIR="/home/"$SUDO_USER"/Pictures/Wallpapers"
 TARGET_WALLPAPER="$TARGET_DIR/background.jpg" #hyprpaper
 SOURCE_WALLPAPER="$SCRIPT_DIR/background.jpg"
 
 
-Version="epsilon_0.5a"
+Version="epsilon_0.7a"
 Support_link="linkgoeshere"
 PACMAN_CONF="/etc/pacman.conf"
 
@@ -60,7 +67,7 @@ sleep 0.1
 
 #nightmare nightmare nightmare
 
-sudo pacman -Sy
+sudo pacman -Syu
 
 if grep -P "^\s*\[multilib\]" "$PACMAN_CONF" > /dev/null; then
 	sleep 0.1
@@ -74,7 +81,6 @@ else
         exit 1
     fi
 fi
-set -e
 #flatpak and pacman
 sudo pacman -S --needed --noconfirm flatpak
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
@@ -112,7 +118,7 @@ fc-cache -fv
 
 #hyprpaper
 
-pacman -S hyprpaper hyprtoolkit hyprlang hyprutils hyprwire
+pacman -S hyprpaper hyprtoolkit hyprlang hyprutils hyprwire --needed --noconfirm
 
 if [ ! -d "$TARGET_DIR" ]; then
     echo "$TARGET_DIR does not exist creating it"
