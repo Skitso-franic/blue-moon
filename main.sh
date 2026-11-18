@@ -39,7 +39,7 @@ TARGET_WALLPAPER="$TARGET_DIR/background.jpg" #hyprpaper
 SOURCE_WALLPAPER="$SCRIPT_DIR/background.jpg"
 
 
-Version="epsilon_0.9a"
+Version="ZETA_1.0a"
 Support_link="https://github.com/Skitso-franic/rice/issues"
 PACMAN_CONF="/etc/pacman.conf"
 
