@@ -10,7 +10,12 @@ SUDO_USER="${SUDO_USER:-nobody}"
 #because if you dont it will break
 #most of the varibles in this script!!!
 
-set -e
+#checks if running on arch linux
+if ! grep -q '^ID=arch' /etc/os-release 2>/dev/null
+ exit 1
+fi
+
+set -euo pipefail
 
 TMP_DIR=$(mktemp -d)
 FONT_DIR="$HOME/.local/share/fonts/MapleMono"
@@ -25,7 +30,7 @@ TARGET_WALLPAPER="$TARGET_DIR/background.jpg" #hyprpaper
 SOURCE_WALLPAPER="$SCRIPT_DIR/background.jpg"
 
 
-Version="epsilon_0.7a"
+Version="epsilon_0.8a"
 Support_link="linkgoeshere"
 PACMAN_CONF="/etc/pacman.conf"
 
