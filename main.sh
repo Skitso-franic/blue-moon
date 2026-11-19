@@ -7,6 +7,8 @@ if [ "$EUID" -ne 0 ]; then
     echo "this script must be run with sudo" >&2
     exit 1
 fi
+clear
+
 
 
 SUDO_USER="${SUDO_USER:-nobody}"
@@ -46,7 +48,7 @@ PACMAN_CONF="/etc/pacman.conf"
 
 
 #end of start varibles
-
+clear
 echo "hypr-rice"
 
 echo "a arch linux rice"
@@ -56,9 +58,9 @@ sleep 0.5
 echo ""
 echo ""
 
-echo " note that this tool is ment to run on a clean install of arch linux"
-echo " and most likely wont work on non fresh installs"
-echo " please back up anything important before useing"
+echo "note that this tool is ment to run on a clean install of arch linux"
+echo "and most likely wont work on non fresh installs"
+echo "please back up anything important before useing"
 echo ""
 echo ""
 
@@ -180,11 +182,12 @@ for item in "$DATA_DIR"/*; do
 done
 
 #finish setup
+clear
 
-echo "setup done"
+echo "setup complete"
 echo ""
 echo "please report any bugs/issues"
 echo "$Support_link"
 echo "script version: $Version"
-
+echo "thank you for useing my script"
 
