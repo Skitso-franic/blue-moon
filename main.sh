@@ -31,11 +31,12 @@ trap 'rm -rf "$TMP_DIR"' EXIT
 
 #debug flag
 DEBUG=false
+#set this manualy if you need it
 
-if [[ "$1" == "--debug" ]]; then
-    DEBUG=true
-    shift
-fi
+#if [[ "$1" == "--debug" ]]; then
+#    DEBUG=true
+#    shift
+#fi
 
 
 FONT_DIR="/home/$SUDO_USER/.local/share/fonts/MapleMono"
