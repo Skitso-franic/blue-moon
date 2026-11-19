@@ -4,6 +4,7 @@ a arch linux rice made by skitso franic <br>
 > [!IMPORTANT]
 > for this rice to work <br>
 > you need a fresh arch install <br>
+> have the rice folder in your home dir <br>
 
 ## dependencies <br>
 > hyprland <br>
