@@ -19,7 +19,7 @@ SUDO_USER="${SUDO_USER:-nobody}"
 #most of the varibles in this script!!!
 
 
-#start of startup varibles
+# varibles
 
 #checks if running on arch linux
 if ! grep -q '^ID=arch' /etc/os-release 2>/dev/null; then
@@ -33,26 +33,20 @@ trap 'rm -rf "$TMP_DIR"' EXIT
 DEBUG=false
 #set this manualy if you need it
 
-#if [[ "$1" == "--debug" ]]; then
-#    DEBUG=true
-#    shift
-#fi
+FONT_DIR="/home/$SUDO_USER/.local/share/fonts/MapleMono" #where fonts go
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" #where the script is located
 
+DATA_DIR="$SCRIPT_DIR/data" #configs and stuff get copyed from here
+CONFIG_DEST="/home/$SUDO_USER/.config" #configs get copyed to here
+TARGET_DIR="/home/"$SUDO_USER"/Pictures/Wallpapers" #where wallpapers go
+TARGET_WALLPAPER="$TARGET_DIR/background.jpg" #where does the wallpaper
+SOURCE_WALLPAPER="$SCRIPT_DIR/background.jpg" #where is the wallpaper
 
-FONT_DIR="/home/$SUDO_USER/.local/share/fonts/MapleMono"
-
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-DATA_DIR="$SCRIPT_DIR/data"
-CONFIG_DEST="/home/$SUDO_USER/.config"
-
-TARGET_DIR="/home/"$SUDO_USER"/Pictures/Wallpapers"
-TARGET_WALLPAPER="$TARGET_DIR/background.jpg" #hyprpaper
-SOURCE_WALLPAPER="$SCRIPT_DIR/background.jpg"
-
-
+# github info
 Version="ZETA_1.0a"
 Support_link="https://github.com/Skitso-franic/rice/issues"
+
+#where pacman config is located
 PACMAN_CONF="/etc/pacman.conf"
 
 
@@ -87,7 +81,7 @@ sleep 0.1
 
 #nightmare nightmare nightmare
 
-pacman -Syu
+pacman -Syu #updates
 
 if grep -P "^\s*\[multilib\]" "$PACMAN_CONF" > /dev/null; then
 	sleep 0.1
@@ -95,17 +89,17 @@ else
     sed -i -e '/#\[multilib\]/,+1s/^#//' "$PACMAN_CONF"
     
     if grep -P "^\s*\[multilib\]" "$PACMAN_CONF" > /dev/null; then
-        pacman -Sy --noconfirm
+        pacman -Sy --noconfirm #sync
     else
         echo "failed to enable multilib please enable multilib manually."
         exit 1
     fi
 fi
 #flatpak and pacman
-pacman -S --needed --noconfirm flatpak
-flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-pacman -S --needed --noconfirm git base-devel
-pacman -S --needed --noconfirm neovim fastfetch firefox rofi
+pacman -S --needed --noconfirm flatpak #installs flatpak
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo #makes flatpack work
+pacman -S --needed --noconfirm git base-devel #installs git + base-devel for yay
+pacman -S --needed --noconfirm neovim fastfetch firefox rofi # installs apps i wanted in the rice
 
 #is yet another yogurt installed?
 if command -v "yay" &> /dev/null; then
@@ -115,7 +109,6 @@ fi
 git clone https://aur.archlinux.org/yay.git || { echo "failed to clone yay repository"; exit 1; }
 chown -R "$SUDO_USER":"$SUDO_USER" yay
 cd yay
-#disabled for testing uncomment this before posting to anything
 
 #fixed running makepkg as sudo
 sudo -u "$SUDO_USER" makepkg -si --noconfirm
@@ -153,7 +146,7 @@ chown "$SUDO_USER":"$SUDO_USER" "$FONT_DIR"/*.ttf
 sudo -u "$SUDO_USER" fc-cache -fv
 
 
-#hyprpaper
+#hyprpaper 
 
 pacman -S hyprpaper hyprtoolkit hyprlang hyprutils hyprwire --needed --noconfirm
 
@@ -163,7 +156,7 @@ if [ ! -d "$TARGET_DIR" ]; then
 fi
 
 if [ -f "$SOURCE_WALLPAPER" ]; then
-    sudo -u "$SUDO_USER" cp "$SOURCE_WALLPAPER" "$TARGET_WALLPAPER"
+    sudo -u "$SUDO_USER" cp "$SOURCE_WALLPAPER" "$TARGET_WALLPAPER" #copy wallpaper
 else
     echo "integ check failed = '$SOURCE_WALLPAPER'"
     exit 1
@@ -171,21 +164,17 @@ fi
 
 #the hyprpaper install took me a week! to get working :(
 
-#safety check
-
 if [ ! -d "$DATA_DIR" ]; then
     echo "integ check failed = $DATA_DIR"
     exit 1
 fi
-
-
 
 #configs
 sudo -u "$SUDO_USER" mkdir -p "$CONFIG_DEST"
 
 for item in "$DATA_DIR"/*; do
     if [ -d "$item" ]; then
-        target_name=$(basename "$item")
+        target_name=$(basename "$item") #copyies the configs from data to ./config
         echo "Copying $target_name to $CONFIG_DEST..."
         sudo -u "$SUDO_USER" cp -r "$item" "$CONFIG_DEST/"
     fi
@@ -200,7 +189,7 @@ echo "please report any bugs/issues"
 echo "$Support_link"
 echo "script version: $Version"
 
-if [[ "$DEBUG" == true ]]; then
+if [[ "$DEBUG" == true ]]; then #this lets you see varibles printed into the terminal
     echo ""
     echo "debug varibles"
     echo "$SUDO_USER"
