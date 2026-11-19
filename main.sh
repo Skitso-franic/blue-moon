@@ -43,8 +43,8 @@ TARGET_WALLPAPER="$TARGET_DIR/background.jpg" #where does the wallpaper
 SOURCE_WALLPAPER="$SCRIPT_DIR/background.jpg" #where is the wallpaper
 
 # github info
-Version="Eta_1.1"
-Support_link="https://github.com/Skitso-franic/rice/issues"
+Version="Eta_1.2"
+Support_link="https://github.com/Skitso-franic/blue-moon/issues"
 
 #where pacman config is located
 PACMAN_CONF="/etc/pacman.conf"
@@ -53,7 +53,10 @@ PACMAN_CONF="/etc/pacman.conf"
 
 #end of start varibles
 clear
-echo "hypr-rice"
+BLUE='\033[38;2;137;166;198m'
+NC='\033[0m'
+
+echo -e "${BLUE}Blue moon${NC}"
 
 echo "a arch linux rice"
 sleep 0.5
