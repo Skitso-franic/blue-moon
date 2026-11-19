@@ -1,4 +1,4 @@
-# hypr-rice <br>
+# blue moon <br>
 a arch linux rice made by skitso franic <br>
 
 > [!IMPORTANT]
