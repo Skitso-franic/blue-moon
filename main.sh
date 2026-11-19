@@ -43,7 +43,7 @@ TARGET_WALLPAPER="$TARGET_DIR/background.jpg" #where does the wallpaper
 SOURCE_WALLPAPER="$SCRIPT_DIR/background.jpg" #where is the wallpaper
 
 # github info
-Version="ZETA_1.0a"
+Version="Eta_1.1"
 Support_link="https://github.com/Skitso-franic/rice/issues"
 
 #where pacman config is located
