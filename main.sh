@@ -29,6 +29,15 @@ fi
 TMP_DIR=$(mktemp -d)
 trap 'rm -rf "$TMP_DIR"' EXIT
 
+#debug flag
+DEBUG=false
+
+if [[ "$1" == "--debug" ]]; then
+    DEBUG=true
+    shift
+fi
+
+
 FONT_DIR="/home/$SUDO_USER/.local/share/fonts/MapleMono"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -189,5 +198,17 @@ echo ""
 echo "please report any bugs/issues"
 echo "$Support_link"
 echo "script version: $Version"
-echo "thank you for useing my script"
 
+if [[ "$DEBUG" == true ]]; then
+    echo ""
+    echo "debug varibles"
+    echo "$SUDO_USER"
+    echo "$FONT_DIR"
+    echo "$SCRIPT_DIR"
+    echo "$DATA_DIR"
+    echo "$CONFIG_DEST"
+    echo "$TARGET_DIR"
+    echo "$TARGET_WALLPAPER"
+    echo "$SOURCE_WALLPAPER"
+    echo "$PACMAN_CONF" 
+fi
