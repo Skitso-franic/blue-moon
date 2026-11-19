@@ -21,7 +21,8 @@ log into hyprland <br>
 open a terminal and run <br>
 > sudo pacman -Syu git <br>
 and then run <br>
-> git clone https://github.com/Skitso-franic/rice <br>
+> git clone https://github.com/Skitso-franic/blue-moon <br>
+then change dir to blue moon <br>
 then run the installer <br>
 >chmod +X main.sh <br>
 sudo ./main.sh <br>
